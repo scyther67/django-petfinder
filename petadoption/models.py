@@ -9,7 +9,7 @@ class MyUser(AbstractUser):
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     password = models.CharField(max_length=128)
-    
+
     def __str__(self):
         return self.fname + " " + self.lname
 # class MyUser(AbstractUser):
@@ -80,8 +80,8 @@ class Comments(models.Model):
 class Adoption_requests(models.Model):
     request_no = models.CharField(max_length=128, primary_key=True)
     requester_name = models.CharField(max_length=128, null=False, blank=False, default='Your name')
-    requester_phone_no = models.CharField(max_length=10, null=False, blank=False, default='Yor phone no')
-    requester_email = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    requester_phone_no = models.CharField(max_length=10, null=False, blank=False, default='Your phone no')
+    requester_username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     request_description = models.TextField(max_length=500)
 
     def __str__(self):

@@ -54,63 +54,51 @@
                 <h1>Sign Up</h1>
               </div>
             <div class="row blog-entries">
-              <div class="col-md-12 text-center">
                 <form action="#" method="POST" class="form-group">
+                  <div class="col-md-4"></div>
+                  <div class="col-md-8">
+                  <table>
                   {% csrf_token %}
-                  <!-- <div class="row">
-                    <div class="col-md-3 form-group">
-                      <label for="name">Name:</label>
-                    </div>
-                    <div class="col-md-9 form-group">
-                      <input type="text" id="name" class="form-control ">
-                    </div>
-                  </div>
+                  {{ form }}
+                </table>
+              </div>
                   <div class="row">
-                    <div class="col-md-3 form-group">
-                      <label for="Phone">Phone No:</label>
-                    </div>
-                    <div class="col-md-9 form-group">
-                      <input type="tel" id="phone" class="form-control ">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3 form-group">
-                      <label for="email">Email:</label>
-                    </div>
-                    <div class="col-md-9 form-group">
-                      <input type="email" id="email" class="form-control ">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3 form-group">
-                      <label for="password">Password:</label>
-                    </div>
-                    <div class="col-md-9 form-group">
-                      <input type="password" id="password" class="form-control ">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3 form-group">
-                      <label for="password">Confirm Password:</label>
-                    </div>
-                    <div class="col-md-9 form-group">
-                      <input type="password" id="password" class="form-control ">
-                    </div>
-                  </div> -->
-                  {{form.as_p}}
-                  <div class="row">
-                    <div class="col-md-12 form-group">
+                    <div class="col-md-6 text-center">
                       <input type="submit" value="Sign Up" class="btn btn-primary">
-                      <input type="button" value="Already Have an Account?" class="btn btn-primary" onclick="location.href='{% url 'user_login' %}'">
                     </div>
-                  </div>
-                </form>
+                    <div class="col-md-6 text-center">
+                      <input type="button" value="Already Have an Account?" class="btn btn-primary" onclick="location.href='{% url 'user_login' %}'">
+                    </div></div>
+
+                </form></div>
               </div>
               <div class="col-md-3"></div>
             </div>
             <!-- END main-content -->
           </div>
         </section>
+        <footer class="site-footer">
+            <div class="container">
+                <div class="row mb-2">
+                  <div class="col-md-4">
+                      <h3>About Us</h3>
+              <p>Petfinder is an online, searchable database of animals who need homes. It is also a directory of nearly 11,000 animal shelters and adoption organizations across India.</p>
+                  </div>
+
+                    <div class="col-md-5"></div>
+              <div class="col-md-2">
+                          <h3>Social</h3>
+                          <ul class="list-unstyled footer-social">
+                              <li><a href="#"><span class="fa fa-twitter"></span> Twitter</a></li>
+                              <li><a href="#"><span class="fa fa-facebook"></span> Facebook</a></li>
+                              <li><a href="#"><span class="fa fa-instagram"></span> Instagram</a></li>
+                              <li><a href="#"><span class="fa fa-snapchat"></span> Snapchat</a></li>
+                          </ul>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <!-- loader -->
