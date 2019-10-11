@@ -20,7 +20,7 @@ class UserRegisterForm(forms.ModelForm):
 class PetRegisterForm(forms.ModelForm):
     class Meta():
         model = Pet
-        exclude = ('owner', )
+        exclude = ('owner', 'created')
 
 
 # class UserLoginForm(forms.ModelForm):

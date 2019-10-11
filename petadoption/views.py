@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import MyUser, Pet
+from .models import MyUser, Pet, Comments
 
 
 
@@ -42,7 +42,8 @@ def user_login(request):
 @login_required
 def pet_info(request, pet_id):
     mypet = Pet.objects.get(id=pet_id)
-    return render(request, 'blog-single.html', {'pet_id':mypet})
+    comments_count = Comments.objects.filter(pet_id=pet_id).count()
+    return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count})
 
 @login_required
 def explore(request):
