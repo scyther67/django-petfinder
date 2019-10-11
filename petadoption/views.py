@@ -85,17 +85,15 @@ def pet_register(request):
 
 
 def user_register(request):
-    #registration = False
     if request.method == 'POST':
         user_form = UserRegisterForm(data=request.POST)
         if user_form.is_valid():
-            # user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             username = user_form.cleaned_data['username']
             user = MyUser()
             try:
                 user = MyUser.objects.get(username=username)
                 messages.error(request, 'Username exists')
-                return render(request,'SignUp.html',{'form':form})
+                return render(request,'SignUp.html',{'form':user_form})
             except user.DoesNotExist:
                 # if user is None:
                     #user_form.save(commit=True)
@@ -108,7 +106,7 @@ def user_register(request):
                 return HttpResponseRedirect(reverse('user_login'))
         else:
             messages.error(request, 'Incorrect details')
-            return render(request, 'SignUp.html',{'form':form})
+            return render(request, 'SignUp.html',{'form':user_form})
 
     else:
         form = UserRegisterForm()
