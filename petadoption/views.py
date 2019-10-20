@@ -42,8 +42,9 @@ def user_login(request):
 @login_required
 def pet_info(request, pet_id):
     mypet = Pet.objects.get(id=pet_id)
-    comments_count = Comments.objects.filter(pet_id=pet_id).count()
-    return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count})
+    comments = Comments.objects.filter(pet_id=pet_id)
+    comments_count = comments.count()
+    return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count, 'comments':comments})
 
 @login_required
 def explore(request):
