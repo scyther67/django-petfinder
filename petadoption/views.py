@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import UserRegisterForm, PetRegisterForm
+from .forms import UserRegisterForm, PetRegisterForm, CommentForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -41,10 +41,18 @@ def user_login(request):
 
 @login_required
 def pet_info(request, pet_id):
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid:
+            mycomment = comment_form.save(commit=False)
+            mycomment.comment_writer = request.user
+            mycomment.pet_id = Pet.objects.filter(id=pet_id)[0]
+            mycomment.save()
+    new_comment_form = CommentForm()
     mypet = Pet.objects.get(id=pet_id)
-    comments = Comments.objects.filter(pet_id=pet_id)
+    comments = Comments.objects.filter(pet_id=pet_id).order_by('created')
     comments_count = comments.count()
-    return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count, 'comments':comments})
+    return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count, 'comments':comments, 'comment_form':new_comment_form})
 
 @login_required
 def explore(request):

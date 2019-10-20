@@ -11,7 +11,7 @@ class MyUser(AbstractUser):
     password = models.CharField(max_length=128)
 
     def __str__(self):
-        return self.fname + " " + self.lname
+        return self.first_name + " " + self.last_name
 # class MyUser(AbstractUser):
 #     username = models.CharField(primary_key=True, max_length=128)
 #     email = models.EmailField(max_length=128, null=False, blank=False)
@@ -55,6 +55,7 @@ class Pet(models.Model):
     description = models.TextField(max_length=1024)
     created = models.DateField(auto_now_add=True)
 
+
     def __str__(self):
         return self.pet_name
 
@@ -79,7 +80,7 @@ class Comments(models.Model):
 
 
 class Adoption_requests(models.Model):
-    request_no = models.CharField(max_length=128, primary_key=True)
+    request_no = models.AutoField(max_length=128, primary_key=True)
     requester_name = models.CharField(max_length=128, null=False, blank=False, default='Your name')
     requester_phone_no = models.CharField(max_length=10, null=False, blank=False, default='Your phone no')
     requester_username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
