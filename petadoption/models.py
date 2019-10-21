@@ -9,29 +9,10 @@ class MyUser(AbstractUser):
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     password = models.CharField(max_length=128)
+    address = models.TextField(max_length=1024)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
-# class MyUser(AbstractUser):
-#     username = models.CharField(primary_key=True, max_length=128)
-#     email = models.EmailField(max_length=128, null=False, blank=False)
-#     first_name = models.CharField(max_length=128, null=False, blank=False, default='fname')
-#     last_name = models.CharField(max_length=128, null=False, blank=False, default='lname')
-#     password = models.CharField(max_length=128, default='pass')
-#     def __str__(self):
-#         return self.fname + " " + self.lname
-
-
-# class User(models.Model):
-#     name = models.CharField(max_length=128, null=False, blank=False)
-#     phone_no = models.CharField(max_length=10, null=False, blank=False)
-#     email = models.EmailField(max_length=128, primary_key=True)
-#     profile_image = models.ImageField(null=False)
-#     password = models.CharField(max_length=20, null=False, blank=False)
-
-#     def __str__(self):
-#         return self.name
-
 
 class Pet(models.Model):
     dog = 'D'
@@ -46,15 +27,24 @@ class Pet(models.Model):
         (yes, 'Yes'),
         (no, 'No'),
     ]
-    #pet_id = models.CharField(max_length=128, primary_key=True)
-    pet_name = models.CharField(max_length=128, null=False, blank=False, default='Pets name')
+    male = 'M'
+    female = 'F'
+    other = 'O'
+    gender_choices = [
+        (male, 'Male'),
+        (female, 'Female'),
+        (other, 'Other'),
+    ]
+    pet_name = models.CharField(max_length=128, null=False, blank=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     animal_type = models.CharField(max_length=1, choices=pet_choices)
     up_for_adoption = models.CharField(max_length=1, choices=adoption_choices, default='N')
     pet_profile_image = models.ImageField(upload_to = os.path.join(settings.MEDIA_ROOT,'pet_profile_image'))
     description = models.TextField(max_length=1024)
     created = models.DateField(auto_now_add=True)
-
+    breed = models.CharField(max_length=128)
+    gender = models.CharField(max_length=1, choices=gender_choices)
+    age = models.IntegerField()
 
     def __str__(self):
         return self.pet_name
@@ -73,7 +63,7 @@ class Comments(models.Model):
     pet_id = models.ForeignKey('Pet', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     comment_writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    comment = models.CharField(max_length=1024, null=False, blank=False, default='Comment')
+    comment = models.CharField(max_length=1024, null=False, blank=False)
 
     def __str__(self):
         return self.comment
@@ -81,11 +71,10 @@ class Comments(models.Model):
 
 class Adoption_requests(models.Model):
     request_no = models.AutoField(max_length=128, primary_key=True)
-    requester_name = models.CharField(max_length=128, null=False, blank=False, default='Your name')
-    requester_phone_no = models.CharField(max_length=10, null=False, blank=False, default='Your phone no')
-    requester_username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    requester_email = models.EmailField(max_length=128)
-    request_description = models.TextField(max_length=500)
+    phone_no = models.CharField(max_length=10, null=False, blank=False)
+    pet = models.ForeignKey('Pet', on_delete=models.CASCADE)
+    requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    description_message = models.TextField(max_length=500)
 
     def __str__(self):
         return self.request_no

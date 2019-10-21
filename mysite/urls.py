@@ -24,9 +24,9 @@ urlpatterns = [
     path('sign_up/', views.user_register, name='user_register'),
     path('explore/', views.explore, name='explore'),
     path('pet/', include('petadoption.urls')),
-    #path('myaccount/', views.my_account, name='my_account'),
     path('logout/', views.user_logout, name='user_logout'),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('myaccount/<str:user_username>/',views.myaccount, name="myaccount"),
 ]
 
 if settings.DEBUG:
