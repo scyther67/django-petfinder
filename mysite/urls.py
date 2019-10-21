@@ -26,7 +26,7 @@ urlpatterns = [
     path('pet/', include('petadoption.urls')),
     path('logout/', views.user_logout, name='user_logout'),
     path('admin/', admin.site.urls),
-    path('myaccount/<str:user_username>/',views.myaccount, name="myaccount"),
+    path('myaccount/<str:user_username>/<str:pet_id>/',views.myaccount, name="myaccount"),
 ]
 
 if settings.DEBUG:

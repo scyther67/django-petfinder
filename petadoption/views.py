@@ -56,14 +56,21 @@ def pet_info(request, pet_id):
     comments_count = comments.count()
     return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count, 'comments':comments, 'comment_form':new_comment_form, 'adoption_form':new_adoption_form})
 
-def myaccount(request, user_username, pet_id=0):
+def myaccount(request, user_username, pet_id):
     user = MyUser.objects.filter(username=user_username)[0]
     pet_list = Pet.objects.filter(owner=user)
-    adoption_request_list = Adoption_requests.objects.none()
-    for p in pet_list:
-        instance = Adoption_requests.objects.filter(pet=p)
-        adoption_request_list = adoption_request_list.union(instance)
-    return render(request, 'myaccount.html', context={'pet_list':pet_list , 'adoption_list':adoption_request_list})
+    if pet_id=='0':
+        pet_selected = False
+        adoption_request_list = Adoption_requests.objects.none()
+    else:
+        pet_selected = True
+        adoption_request_list = Adoption_requests.objects.filter(pet=pet_id).order_by('created')
+
+    print(pet_selected)
+    # for p in pet_list:
+    #     instance = Adoption_requests.objects.filter(pet=p)
+    #     adoption_request_list = adoption_request_list.union(instance)
+    return render(request, 'myaccount.html', context={'pet_list':pet_list , 'adoption_list':adoption_request_list, 'pet_selected':pet_selected})
 
 @login_required
 def explore(request):

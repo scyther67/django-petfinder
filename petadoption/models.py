@@ -51,12 +51,13 @@ class Pet(models.Model):
 
 
 class Pet_Photos(models.Model):
-    photo_id = models.ForeignKey('Pet', on_delete=models.CASCADE)
-    photo_no = models.CharField(max_length=128, primary_key=True)
+    pet= models.ForeignKey('Pet', on_delete=models.CASCADE)
     pet_image = models.ImageField(null=False)
+    created = models.DateTimeField(auto_now_add=True)
+    caption = models.CharField(max_length=256)
 
     def __str__(self):
-        return self.photo_id
+        return self.id
 
 
 class Comments(models.Model):
@@ -75,6 +76,7 @@ class Adoption_requests(models.Model):
     pet = models.ForeignKey('Pet', on_delete=models.CASCADE)
     requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     description_message = models.TextField(max_length=500)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.request_no
