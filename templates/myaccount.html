@@ -28,25 +28,29 @@
               </div>
           </div>
           <nav class="navbar navbar-expand-md  navbar-light bg-light">
-                <div class="container">
-                  <div class="collapse navbar-collapse" id="navbarMenu">
-                      <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                              <a class="nav-link" href="explore.html">Explore</a>
-                        </li>
+              <div class="container">
+                <div class="collapse navbar-collapse" id="navbarMenu">
+                    <ul class="navbar-nav mx-auto">
                       <li class="nav-item">
-                              <a class="nav-link" href="about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                              <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                              <a class="nav-link active" href="index.html">Account</a>
-                        </li>
-                      </ul>
-                    </div>
-                </div>
-            </nav>
+                            <a class="nav-link active" href="{% url 'explore' %}">Explore</a>
+                      </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}">About</a>
+                      </li>
+                      <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pet_register' %}">Add Pet</a>
+                      </li>
+                      <li class="nav-item">
+                            <a class="nav-link" href="{% url 'adoption_explore' %}">Adopt</a>
+                      </li>
+                      <li class="nav-item">
+                            <a class="nav-link active" href="#">Account</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <a href={%  url 'user_logout' %}>Logout</a>
+              </div>
+          </nav>
         </header>
       <!-- END header -->
 

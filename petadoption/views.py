@@ -56,6 +56,7 @@ def pet_info(request, pet_id):
     comments_count = comments.count()
     return render(request, 'blog-single.html', {'pet':mypet, 'comments_count':comments_count, 'comments':comments, 'comment_form':new_comment_form, 'adoption_form':new_adoption_form})
 
+@login_required
 def myaccount(request, user_username, pet_id):
     user = MyUser.objects.filter(username=user_username)[0]
     pet_list = Pet.objects.filter(owner=user)
@@ -65,8 +66,6 @@ def myaccount(request, user_username, pet_id):
     else:
         pet_selected = True
         adoption_request_list = Adoption_requests.objects.filter(pet=pet_id).order_by('created')
-
-    print(pet_selected)
     # for p in pet_list:
     #     instance = Adoption_requests.objects.filter(pet=p)
     #     adoption_request_list = adoption_request_list.union(instance)
@@ -139,3 +138,10 @@ def user_register(request):
     else:
         form = UserRegisterForm()
         return render(request, 'SignUp.html',{'form':form})
+
+def user_logout(request):
+   logout(request)
+   return HttpResponseRedirect(reverse('user_login'))
+
+def about(request):
+    return render(request, 'about.html')

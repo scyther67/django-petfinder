@@ -35,178 +35,115 @@
               </div>
           </div>
           <nav class="navbar navbar-expand-md  navbar-light bg-light">
-                <div class="container">
-                  <div class="collapse navbar-collapse" id="navbarMenu">
-                      <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                              <a class="nav-link" href="index.html">Home</a>
-                        </li>
+              <div class="container">
+                <div class="collapse navbar-collapse" id="navbarMenu">
+                    <ul class="navbar-nav mx-auto">
                       <li class="nav-item">
-                              <a class="nav-link" href="explore.html">Explore</a>
-                        </li>
-                        <li class="nav-item">
-                              <a class="nav-link" href="about.html">About</a>
-                        </li>
-                        <li class="nav-item">
-                              <a class="nav-link" href="contact.html">Contact</a>
-                        </li>
-                      </ul>
-                    </div>
-                </div>
-            </nav>
+                            <a class="nav-link" href="{% url 'explore' %}">Explore</a>
+                      </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}">About</a>
+                      </li>
+                      <li class="nav-item">
+                            <a class="nav-link" href="{% url 'pet_register' %}">Add Pet</a>
+                      </li>
+                      <li class="nav-item">
+                            <a class="nav-link" href="{% url 'adoption_explore' %}">Adopt</a>
+                      </li>
+                      <li class="nav-item">
+                            <a class="nav-link" href="{% url 'myaccount' user_username=request.user.username pet_id='0' %}">Account</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <a href={%  url 'user_logout' %}>Logout</a>
+              </div>
+          </nav>
         </header>
         <!-- END header -->
       <!-- END header -->
 
     <section class="site-section py-lg">
       <div class="container">
-
         <div class="row blog-entries element-animate">
-
-          <div class="col-md-12 text-center">
-            <img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="{{pet.pet_name}}'s Profile Picture" class="img-fluid mb-5">
-             <div class="post-meta">
-                        <!-- <span class="author mr-2"><img src="" alt="{{pet.pet_name}}'s Profile Picture" class="mr-2"> Colorlib</span>&bullet; -->
-                        <span class="mr-2">{{pet.created}}</span> &bullet;
-                        <span class="ml-2"><span class="fa fa-comments"></span>{{comments_count}}</span>
-                      </div>
-            <h1 class="mb-4">{{pet.pet_name}}</h1>
-            <a class="category mb-5" href="#">{% if pet.animal_type == 'D' %}Dog{% elif pet.animal.type == 'C' %}Cat{% endif %}</a>
-
-            <div class="post-content-body">
-              {{pet.description}}
-              <section class="pt-5 pb-5">
-                <div class="container">
-              <div class="col-md-12 text-center">
-                {% if comments %}
-                  <h3 class="mb-5">Comments</h3>
-                {% for comm in comments %}
-                <div class="comment-body">
-                <h3>{{ comm.comment_writer }}</h3>
-                <div class="meta">{{comm.created}}</div>
-                <p>{{comm.comment}}</p>
+          <div class="p-5 bg-light">
+            <div class="col-md-12 text-center">
+              <img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="{{pet.pet_name}}'s Profile Picture" class="img-fluid mb-5">
+                <div class="post-meta">
+                  <span class="mr-2">{{pet.created}}</span> &bullet;
+                  <span class="ml-2"><span class="fa fa-comments"></span>{{comments_count}}</span>
                 </div>
-                {% endfor %}
-                {% endif %}
-                <!-- END comment-list -->
-                <div class="comment-form-wrap pt-5">
-                  <div class="col-md-12 text-center">
-                <form method="POST" action="#" class="p-5 bg-light">
-                  <h3 class="mb-5">Leave a comment</h3>
-                  {% csrf_token %}
-                  {{comment_form.as_p}}
-                  <div class="form-group">
-                    <input type="submit" value="Post Comment" name="comment_form_submit" class="btn btn-primary">
-                  </div>
-
-
-                </form>
+                <h1 class="mb-4">{{pet.pet_name}}</h1>
+                <p>Type: {% if pet.animal_type == 'D' %}Dog{% elif pet.animal_type == 'C' %}Cat{% endif %}</p>
+                <p>Gender: {% if pet.gender == 'M' %}Male{% elif pet.gender == 'F' %}Female{% elif pet.gender == 'O' %}Other{% endif %}</p>
+                <p>Age:  {{pet.age}} </p>
+                <p>Breed:  {{pet.breed}} </p>
+                <p>Description: {{pet.description}}</p>
+                <p> {% if pet.owner == request.user %}Your Pet{% else %}{{  pet.owner }}{% endif %}</p>
               </div>
             </div>
-
           </div>
-             </div>
-    </section>
+        </div>
+      </section>
+
+      <section class="pt-5 pb-5">
+        <div class="container">
+          <div class="col-md-12 text-center">
+            {% if comments %}
+              <h3 class="mb-5">Comments</h3>
+              {% for comm in comments %}
+              <div class="comment-body">
+              <h3>{{ comm.comment_writer }}</h3>
+              <div class="meta">{{comm.created}}</div>
+              <p>{{comm.comment}}</p>
+              </div>
+              {% endfor %}
+            {% else %}
+            <h3 class="mb-5">No Comments on this Profile Yet</h3>
+
+            {% endif %}
+          </div>
+          <div class="col-md-12 text-center">
+            <div class="comment-form-wrap pt-5">
+              <form method="POST" action="#" class="p-5 bg-light">
+                <h3 class="mb-5">Leave a comment</h3>
+                  {% csrf_token %}
+                  {{comment_form.as_p}}
+                <div class="form-group">
+                  <input type="submit" value="Post Comment" name="comment_form_submit" class="btn btn-primary">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
 
 
 
-
-    <section class="site-section pt-5 pb-5">
+{% if pet.up_for_adoption == 'Y' and not pet.owner == request.user %}
+    <section class="pt-5 pb-5">
       <div class="container">
+          <div class="p-5 bg-light">
           <div class="col-md-12 text-center">
             <h1>Request for Adoption</h1>
           </div>
         <div class="row blog-entries">
-          <div class="col-md-12 text-center">
+          <div class="col-md-3"></div>
+          <div class="col-md-8">
             <form action="#" method="post" class="form-group">
-              <!-- <div class="row">
-                <div class="col-md-3 form-group">
-                  <label for="name">Name:</label>
-                </div>
-                <div class="col-md-9 form-group">
-                  <input type="text" id="name" class="form-control ">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-3 form-group">
-                  <label for="Phone">Phone No:</label>
-                </div>
-                <div class="col-md-9 form-group">
-                  <input type="tel" id="phone" class="form-control ">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-3 form-group">
-                  <label for="email">Email:</label>
-                </div>
-                <div class="col-md-9 form-group">
-                  <input type="email" id="email" class="form-control ">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-3 form-group">
-                  <label for="message">Write Message</label>
-                </div>
-                <div class="col-md-9 form-group">
-                  <textarea name="message" id="message" class="form-control " cols="30" rows="8"></textarea>
-                </div>
-              </div> -->
+              <table cellpadding=10>
               {% csrf_token %}
-              {{adoption_form.as_p}}
+              {{ adoption_form }}</table>
               <div class="row">
-              <div class="col-md-12 text-center">
-                  <input type="submit" name="adoption_form_submit" value="Send Adoption Request" class="btn btn-primary" >
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <!-- END main-content -->
-      </div>
-    </section>
 
-
-
-    <!-- <section class="site-section pt-5 pb-5">
-      <div class="container">
-        <div class="row blog-entries element-animate">
-          <div class="col-md-12 text-center">
-            <h1 class="mb-4">{{pet.pet_name}}</h1>
-            <p>Pet Type:{% if pet.animal_type == 'D' %}Dog{% elif pet.animal.type == 'C' %}Cat{% endif %}</p>
-            <p>Description:{{pet.description}}</p>
-            <p>Pet up for Adoption: {% if pet.up_for_adoption == 'N' %}Not up for Adoption
-              {% elif pet.up_for_adoption == 'Y' %}
-              <form action="#" class="form-group">
-                <div class="form-group">
-                  <input type="button" value="Request for Adoption" class="btn btn-primary">
-                </div>
+                <div class="col-md-2"></div>
+                  <input type="submit" name="adoption_form_submit" value="Send Adoption Request" class="btn btn-primary">
+                </div></div>
               </form>
-              {% endif %}</p>
-              <p>{% if pet.owner == request.user %}
-                  <form action="#" class="form-group">
-                    <div class="form-group">
-                      <input type="button" value="Add images" class="btn btn-primary">
-                    </div>
-                  </form>
-                  {% else %} Owner's Name:{{ pet.owner }}
-                  {% endif %}</p>
-
-                    <h1 class="mb-4">Photos</h1>
-                    <div class="col-md-3">
-                    <a href="blog-single.html" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                    <img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="Image placeholder">
-                    <div class="blog-content-body">
-                    <div class="post-meta"><span class="author mr-2"><img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="Colorlib"></span></div>
-                    <h2>{{ pet.pet_name }}</h2>
-                    </div>
-                    </a>
-                  </div>
+            </div>
           </div>
         </div>
-      </div>
-      </section> -->
-
-    <!-- END section -->
+    </section>
+{% endif %}
 
     <footer class="site-footer">
         <div class="container">
@@ -228,7 +165,6 @@
                   </div>
                 </div>
             </div>
-        </div>
     </footer>
       <!-- END footer -->
 

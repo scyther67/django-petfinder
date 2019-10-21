@@ -27,6 +27,8 @@ urlpatterns = [
     path('logout/', views.user_logout, name='user_logout'),
     path('admin/', admin.site.urls),
     path('myaccount/<str:user_username>/<str:pet_id>/',views.myaccount, name="myaccount"),
+    path('logout/', views.user_logout, name='user_logout'),
+    path('about/', views.about, name='about'),
 ]
 
 if settings.DEBUG:
