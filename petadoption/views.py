@@ -6,9 +6,11 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import MyUser, Pet, Comments, Adoption_requests
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db.models import Q
 
-
-
+email_from = settings.EMAIL_HOST_USER
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -31,7 +33,6 @@ def user_login(request):
             #return HttpResponse("Invalid Details")
     return render(request, 'login.html')
 
-
 @login_required
 def pet_info(request, pet_id):
     if request.method == 'POST':
@@ -49,6 +50,16 @@ def pet_info(request, pet_id):
                 myadoptionrequest.pet = Pet.objects.filter(id=pet_id)[0]
                 myadoptionrequest.requester = request.user
                 myadoptionrequest.save()
+                owner_email = MyUser.objects.get(username=myadoptionrequest.pet.owner.username).email
+                requester_email = request.user.email
+                subject_owner = 'Adoption Request for your pet'
+                subject_receiver = 'Adoption Request made by you'
+                owner_message = myadoptionrequest.pet.pet_name+' has been requested for adoption by '+request.user.first_name+'. Open the website to view adoption request now.'
+                receiver_message = 'You have requested for the adoption of '+myadoptionrequest.pet.pet_name+'.'
+                owner_receipent = [owner_email]
+                receiver_receipent = [requester_email]
+                send_mail(subject_owner, owner_message, email_from, owner_receipent)
+                send_mail(subject_receiver, receiver_message, email_from, receiver_receipent)
     new_comment_form = CommentForm()
     new_adoption_form = AdoptionRequestForm()
     mypet = Pet.objects.get(id=pet_id)
@@ -69,18 +80,27 @@ def myaccount(request, user_username, pet_id):
     # for p in pet_list:
     #     instance = Adoption_requests.objects.filter(pet=p)
     #     adoption_request_list = adoption_request_list.union(instance)
-    return render(request, 'myaccount.html', context={'pet_list':pet_list , 'adoption_list':adoption_request_list, 'pet_selected':pet_selected})
+    my_requests = Adoption_requests.objects.filter(requester=user).order_by('created')
+    return render(request, 'myaccount.html', context={'pet_list':pet_list , 'adoption_list':adoption_request_list, 'my_requests':my_requests, 'pet_selected':pet_selected })
 
 @login_required
 def explore(request):
-    pet_list = Pet.objects.order_by('?')[:16]
+    query = request.GET.get("q")
+    if query:
+        pet_list = Pet.objects.all().exclude(owner=request.user).filter(
+        Q(pet_name__icontains=query)|
+        Q(animal_type__icontains=query[0])|
+        Q(breed__icontains=query)
+        )[:16]
+    else:
+        pet_list = Pet.objects.all().exclude(owner=request.user).order_by('?')[:16]
     #pet_list = Pet.objects.filter(up_for_adoption='Y').order_by('?')[:16]
     return render(request, 'explore.html', context={'pet_list':pet_list})
 
 
 @login_required
 def adoption_explore(request):
-    pet_list = Pet.objects.filter(up_for_adoption='Y').order_by('?')[:16]
+    pet_list = Pet.objects.filter(up_for_adoption='Y').exclude(owner=request.user).order_by('?')[:16]
     return render(request, 'adoption_explore.html', context={'pet_list':pet_list})
 
 
@@ -145,3 +165,9 @@ def user_logout(request):
 
 def about(request):
     return render(request, 'about.html')
+
+def delete_pet(request, pet_id):
+    query = Pet.objects.get(id=pet_id)
+    query.delete()
+    messages.success(request, 'You have Deleted successfully')
+    return HttpResponseRedirect(reverse('explore'))

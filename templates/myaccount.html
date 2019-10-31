@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Paw</title>
+    <title>Pet Finder</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700|Inconsolata:400,700" rel="stylesheet">
@@ -22,7 +22,7 @@
                 <div class="row pt-5">
                     <div class="col-12 text-center">
                       <a class="absolute-toggle d-block d-md-none" data-toggle="collapse" href="#navbarMenu" role="button" aria-expanded="false" aria-controls="navbarMenu"><span class="burger-lines"></span></a>
-                      <h1 class="site-logo"><a href="index.html">Paw</a></h1>
+                      <h1 class="site-logo"><a href="index.html">Pet Finder</a></h1>
                   </div>
                 </div>
               </div>
@@ -32,7 +32,7 @@
                 <div class="collapse navbar-collapse" id="navbarMenu">
                     <ul class="navbar-nav mx-auto">
                       <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'explore' %}">Explore</a>
+                            <a class="nav-link" href="{% url 'explore' %}">Explore</a>
                       </li>
                     <li class="nav-item">
                             <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -53,92 +53,117 @@
           </nav>
         </header>
       <!-- END header -->
-
-	<section class="site-section pt-5">
-          <div class="container">
-			<div class="row blog-entries">
-              <div class="col-md-5 text-center">
-                <div class="row mb-4">
+      <section class="site-section pt-5">
+            <div class="container bg-light p-5">
+                <div class="row">
                   <div class="col-md-12 text-center">
-                    <h2 class="mb-4">My Pets</h2>
+                     <h2 class="mb-4">Your Pets</h2>
                   </div>
-                </div>
-                {% for pet in pet_list %}
-                  <a href="{% url 'myaccount' user_username=request.user.username pet_id=pet.id %}" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                      <img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="Image placeholder">
-                      <div class="blog-content-body">
-                          <div class="post-meta">
-                            <!-- <span class="author mr-2"><img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="Colorlib"></span> -->
-                          </div>
+              </div>
+              {%  if pet_list %}
+              <div class="row blog-entries">
+                <div class="col-md-12 text-center">
+                    <div class="row">
+                      {% for pet in pet_list %}
+                      <div class="col-md-3">
+                        <a href="{% url 'myaccount' user_username=request.user.username pet_id=pet.id %}" class="blog-entry element-animate" data-animate-effect="fadeIn">
+                          <img src="{{MEDIA_URL}}{{pet.pet_profile_image.url}}" alt="Image placeholder">
+                          <div class="blog-content-body">
                           <h2>{{ pet.pet_name }}</h2>
-                          <a href="{% url 'pet_info' pet_id=pet.id %}">Click to view Details</a>
+                          </div>
+                        </a>
+                          <a href="{% url 'pet_info' pet_id=pet.id %}">Click to view {{ pet.pet_name }} Details</a>
                       </div>
-                    </a>
-                {% endfor %}
-                </div>
-                  <div class="col-md-2"></div>
-              <div class="col-md-5 text-center">
-                <div class="row mb-4">
-                  <div class="col-md-12 text-center">
-                    <h2 class="mb-4">Adoption Requests</h2>
+                      {% endfor %}
+                    </div>
                   </div>
                 </div>
-      {% if pet_selected %}
-
-                {% if adoption_list %}
-
-                <div class="row mb-5 mt-5">
-                    {% for adoption in adoption_list %}
-                    <div class="post-entry-horzontal">
-                                      <!-- <a href="blog-single.html"> -->
-                                        <span class="text">
-                                          <div class="post-meta">
-                                            <span class="author mr-2">{{adoption.requester}}</span>
-                                            <span class="mr-2">{{adoption.created}}</span>
-                                            <span class="ml-2">{{adoption.phone_no}}</span>
-                                          </div>
-                                          <h4>{{adoption.description_message}}</h4>
-                                        </span>
-                                      <!-- </a> -->
-                                    </div>
-                    {% endfor %}
-                    </div>
-                </div>
-                {% else %}
-                    <h4 class="mb-4">No Requests for Current Pet</h4>
                 {% endif %}
-
-
-      {% else %}
-                  <h4 class="mb-4">Select a pet to See Requests Here</h4>
-                <!-- <h2 class="mb-4">No adoption requests</h2> -->
-              </div>
             </div>
-      {% endif %}
+        </section>
 
+
+        <section class="site-section pt-5">
+                <div class="container">
+			               <div class="row blog-entries">
+                       <div class="col-md-5 text-center bg-light p-5">
+                         <div class="row mb-4"><div class="col-md-12 text-center"><h2 class="mb-4">My requests sent to</h2></div></div>
+                            {% if my_requests %}
+                              {% for req in my_requests %}
+                              <div class="pt-5 pb-5">
+                              <div class="p-5">
+                              <h3>Pet name: {{req.pet}}</h2>
+                              <a href="{% url 'pet_info' pet_id=req.pet.id %}" class="blog-entry element-animate" data-animate-effect="fadeIn">
+                                <img src="{{MEDIA_URL}}{{req.pet.pet_profile_image.url}}" alt="{{req.pet.pet_name}}">
+                                <!-- <div class="blog-content-body"> -->
+                                <!-- <h2>{{ pet.pet_name }}</h2> -->
+                                <!-- </div> -->
+                              </a>
+                              <h5>Description Message: {{req.description_message}}</h2>
+                            </div>
+                          </div>
+                            {% endfor %}
+                            {% else %}<h2 class="mb-4">No Requests sent</h2>
+                            {% endif %}
+                          </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-5 text-center bg-light p-5">
+              <div class="row mb-4"><div class="col-md-12 text-center"><h2 class="mb-4">Adoption Requests</h2></div></div>
+                {% if pet_selected %}
+                {% if adoption_list %}
+                {% for adoption in adoption_list %}
+                <div class="pt-5 pb-5">
+                <div class="p-5">
+                  <h3>Requester: {{adoption.requester}}</h2>
+                  <h5>Description Message: {{adoption.description_message}}</h2>
+                  <h5>Contact: {{adoption.phone_no}}</h2>
+                </div>
+              </div>
+                {% endfor %}
+                {% else %}
+                    <h2 class="mb-4">No Requests for Current Pet</h2>
+                {% endif %}
+               </div>
+               {% else %}<h2 class="mb-4">Select a pet to See Requests Here</h2>
+               {% endif %}
+             </div>
+           </div>
           </section>
-          <footer class="site-footer">
-              <div class="container">
-                  <div class="row mb-2">
-                    <div class="col-md-4">
-                        <h3>About Us</h3>
-                <p>Petfinder is an online, searchable database of animals who need homes. It is also a directory of nearly 11,000 animal shelters and adoption organizations across India.</p>
-                    </div>
 
-                      <div class="col-md-5"></div>
-                <div class="col-md-2">
-                            <h3>Social</h3>
-                            <ul class="list-unstyled footer-social">
-                                <li><a href="#"><span class="fa fa-twitter"></span> Twitter</a></li>
-                                <li><a href="#"><span class="fa fa-facebook"></span> Facebook</a></li>
-                                <li><a href="#"><span class="fa fa-instagram"></span> Instagram</a></li>
-                                <li><a href="#"><span class="fa fa-snapchat"></span> Snapchat</a></li>
-                            </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+              <footer class="site-footer">
+                  <div class="container">
+                      <div class="row mb-2">
+                        <div class="col-md-4">
+                            <h3>About Us</h3>
+                    <p>Petfinder is an online, searchable database of animals who need homes. It is also a directory of nearly 11,000 animal shelters and adoption organizations across India.</p>
                         </div>
+
+
+                          <div class="col-md-5"></div>
+                    <div class="col-md-2">
+                                <h3>Social</h3>
+                                <ul class="list-unstyled footer-social">
+                                    <li><a href="https://twitter.com/petfinder?lang=en"><span class="fa fa-twitter"></span> Twitter</a></li>
+                                    <li><a href="https://www.facebook.com/Petfinder/"><span class="fa fa-facebook"></span> Facebook</a></li>
+                                    <li><a href="https://www.instagram.com/petfinder/?hl=en"><span class="fa fa-instagram"></span> Instagram</a></li>
+                                </ul>
+                            </div>
+                          </div>
                       </div>
                   </div>
-              </div>
-          </footer>
+              </footer>
    	</div>
 
     <!-- loader -->
