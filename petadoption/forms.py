@@ -31,6 +31,8 @@ class AdoptionRequestForm(forms.ModelForm):
     class Meta():
         model = Adoption_requests
         fields = ['description_message', 'phone_no']
+
+
 # class UserLoginForm(forms.ModelForm):
 #     #username = forms.CharField(widget=forms.TextInput(attrs={'class':"input--style-3", 'type':"text" , 'placeholder':"Username",'name':"username"}))
 #     #password = forms.CharField(widget=forms.PasswordInput(attrs={'class':"input--style-3", 'type':"password" ,'placeholder':"Password" ,'name':"password"}))

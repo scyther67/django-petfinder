@@ -100,8 +100,22 @@ def explore(request):
 
 @login_required
 def adoption_explore(request):
-    pet_list = Pet.objects.filter(up_for_adoption='Y').exclude(owner=request.user).order_by('?')[:16]
-    return render(request, 'adoption_explore.html', context={'pet_list':pet_list})
+    dog_enabled = bool(request.GET.get('dog_checkbox'))
+    cat_enabled = bool(request.GET.get('cat_checkbox'))
+    all_pets = Pet.objects.filter(up_for_adoption='Y').exclude(owner=request.user)
+    pet_list= Pet.objects.none()
+    query = request.GET.get("q")
+    if query or 'dog_checkbox' in request.GET or 'cat_checkbox' in request.GET:
+        if query:
+            pet_list |= all_pets.filter(Q(pet_name__icontains=query)|Q(breed__icontains=query))
+        if 'dog_checkbox' in request.GET:
+            pet_list |= all_pets.filter(Q(animal_type=Pet.dog))
+        if 'cat_checkbox' in request.GET:
+            pet_list |= all_pets.filter(Q(animal_type=Pet.cat))
+    else:
+        pet_list = all_pets
+    pet_list = pet_list.order_by('?')[:16]
+    return render(request, 'adoption_explore.html', context={'pet_list':pet_list,'dog_enabled':dog_enabled, 'cat_enabled':cat_enabled})
 
 
 @login_required
